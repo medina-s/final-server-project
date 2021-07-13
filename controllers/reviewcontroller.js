@@ -1,6 +1,8 @@
 const Express = require("express");
 const router = Express.Router();
+
 // let validateJWT = require("../middleware/validate-jwt");
+
 
 const { ReviewModel } = require("../models")
 
@@ -37,6 +39,7 @@ router.post("/create", async (req, res) => {
 Review Update
 ===================================
 */
+
 
 router.post("/update/:entryId", async (req, res) => {
     const { title, date, entry } = req.body.journal;
