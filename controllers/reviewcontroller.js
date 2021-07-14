@@ -94,6 +94,14 @@ Review get all (Marla)
 ===================================
 */
 
+router.get("/", async (req, res) => {
+    try {
+        const entries = await ReviewModel.findAll();
+        res.status(200).json(entries);
+    } catch (err) {
+        res.status(500).json({ error: err });
+    }
+});
 
 
 
@@ -103,3 +111,27 @@ Review get all (Marla)
 Review delete (Marla)
 ===================================
 */
+
+router.delete("/delete/:id", validateJWT, async (req, res) =>{
+    const ownerId = req.user.id;
+    const reviewId = req.params.id;
+
+    try {
+        const query = {
+            where: {
+                id: reviewId,
+                owner: userId,
+            }
+        };
+
+        await ReviewModel.destroy(query);
+        res.status(200).json({ message: "Review Entry Removed" });
+    } catch (err) {
+        res.status(500).json({ error: err });
+    }
+});
+router.get('/about', (req, res) => {
+    res.send("This is the about route!");
+});
+
+module.exports = router;
