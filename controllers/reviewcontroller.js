@@ -1,12 +1,11 @@
 const Express = require("express");
 const router = Express.Router();
+let validateJWT = require("../middleware/validate-jwt");
 
-// let validateJWT = require("../middleware/validate-jwt");
+const { ReviewModel } = require("../models");
+const Review = require("../models/review");
 
-
-const { ReviewModel } = require("../models")
-
-router.get("/about", (req, res)=> {
+router.get("/about", validateJWT, (req, res)=> {
     res.send("hey, how are you")
 });
 
@@ -16,13 +15,13 @@ Review Create
 ===================================
 */
 
-router.post("/create", async (req, res) => {
-    const { title, date, entry } = req.body.review;
+router.post("/create", validateJWT, async (req, res) => {
+    const { movie, date, feedback } = req.body.review;
     const { id } = req.user;
     const reviewEntry = {
-        title, 
+        movie, 
         date, 
-        entry,
+        feedback,
         owner: id
     }
     try {
@@ -40,10 +39,9 @@ Review Update
 ===================================
 */
 
-
-router.post("/update/:entryId", async (req, res) => {
-    const { title, date, entry } = req.body.journal;
-    const reviewId = req.params.entryId;
+router.put("/update/:feedbackId", validateJWT, async (req, res) => {
+    const { movie, date, feedback } = req.body.review;
+    const reviewId = req.params.feedbackId;
     const userId = req.user.id;
 
     const query = {
@@ -54,9 +52,9 @@ router.post("/update/:entryId", async (req, res) => {
     };
 
     const updatedReview = {
-        title: title,
+        movie: movie,
         date: date,
-        entry: entry
+        feedback: feedback
     };
 
     try {
@@ -76,7 +74,17 @@ Review get mine
 */
 
 router.get("/mine", validateJWT, async (req, res) => {
-    const { id }
+    const { id } = req.user;
+    try {
+        const userReviews = await ReviewModel.findAll({
+            where: {
+                owner: id
+            }
+        });
+        res.status(200).json(userReviews);
+    } catch (err) {
+        res.status(500).json({ error: err });
+    }
 })
 
 
