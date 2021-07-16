@@ -113,25 +113,20 @@ Review delete (Marla)
 */
 
 router.delete("/delete/:id", validateJWT, async (req, res) =>{
-    const ownerId = req.user.id;
+    const userId = req.user.id;
     const reviewId = req.params.id;
-
     try {
         const query = {
             where: {
                 id: reviewId,
-                owner: userId,
+                owner: userId
             }
         };
-
         await ReviewModel.destroy(query);
         res.status(200).json({ message: "Review Entry Removed" });
     } catch (err) {
         res.status(500).json({ error: err });
     }
-});
-router.get('/about', (req, res) => {
-    res.send("This is the about route!");
 });
 
 module.exports = router;
