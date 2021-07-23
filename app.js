@@ -5,10 +5,6 @@ const dbConnection = require("./db")
 
 app.use(require('./middleware/headers'))
 
-app.use(require('./middleware/headers'));
-
-app.use(require('./middleware/headers'))
-
 const controllers = require("./controllers");
 
 app.use(Express.json());
@@ -21,8 +17,8 @@ app.use("/review", controllers.reviewController);
 dbConnection.authenticate()
     .then(() => dbConnection.sync())
     .then(() => {
-        app.listen(3000, () => {
-            console.log(`[Server]: App is listening on 3000.`);
+        app.listen(process.env.PORT, () => {
+            console.log(`[Server]: App is listening on ${process.env.PORT}`);
         })
     })
     .catch((err) => {
