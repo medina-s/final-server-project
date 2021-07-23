@@ -3,7 +3,6 @@ const router = Express.Router();
 let validateJWT = require("../middleware/validate-jwt");
 
 const { ReviewModel } = require("../models");
-const Review = require("../models/review");
 
 router.get("/about", validateJWT, (req, res)=> {
     res.send("hey, how are you")
@@ -65,7 +64,6 @@ router.put("/update/:feedbackId", validateJWT, async (req, res) => {
     }
 })
 
-module.exports = router;
 
 /*
 ====================================
@@ -94,7 +92,7 @@ Review get all (Marla)
 ===================================
 */
 
-router.get("/", async (req, res) => {
+router.get("/", validateJWT, async (req, res) => {
     try {
         const entries = await ReviewModel.findAll();
         res.status(200).json(entries);
@@ -113,14 +111,14 @@ Review delete (Marla)
 */
 
 router.delete("/delete/:id", validateJWT, async (req, res) =>{
-    const ownerId = req.user.id;
+    const userId = req.user.id;
     const reviewId = req.params.id;
 
     try {
         const query = {
             where: {
                 id: reviewId,
-                owner: userId,
+                owner: userId
             }
         };
 
@@ -130,8 +128,7 @@ router.delete("/delete/:id", validateJWT, async (req, res) =>{
         res.status(500).json({ error: err });
     }
 });
-router.get('/about', (req, res) => {
-    res.send("This is the about route!");
-});
+
 
 module.exports = router;
+
