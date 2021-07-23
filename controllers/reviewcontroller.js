@@ -113,7 +113,6 @@ Review delete (Marla)
 router.delete("/delete/:id", validateJWT, async (req, res) =>{
     const userId = req.user.id;
     const reviewId = req.params.id;
-
     try {
         const query = {
             where: {
@@ -121,7 +120,6 @@ router.delete("/delete/:id", validateJWT, async (req, res) =>{
                 owner: userId
             }
         };
-
         await ReviewModel.destroy(query);
         res.status(200).json({ message: "Review Entry Removed" });
     } catch (err) {
